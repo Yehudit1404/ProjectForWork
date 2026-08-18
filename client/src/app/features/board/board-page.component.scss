@@ -1,0 +1,124 @@
+:host {
+  display: block;
+  animation: fade-in-up 0.32s ease both;
+}
+
+.hero {
+  background: var(--hero-gradient);
+  padding: var(--space-4) 0 var(--space-3);
+  border-bottom: 1px solid var(--color-border);
+  transition: var(--theme-transition);
+}
+
+h1 {
+  font-size: 30px;
+  color: var(--color-primary-dark);
+}
+
+.subtitle {
+  color: var(--color-text-secondary);
+  margin: 6px 0 var(--space-3);
+}
+
+.search-field {
+  width: 100%;
+  max-width: 640px;
+
+  ::ng-deep .mat-mdc-text-field-wrapper {
+    background: var(--color-surface);
+  }
+}
+
+.chips-row {
+  padding: var(--space-3) 0 var(--space-1);
+}
+
+mat-chip-option, mat-chip-option.mat-mdc-chip-option {
+  transition: transform 0.15s ease;
+}
+
+.category-chip.mat-mdc-chip-option {
+  --mdc-chip-elevated-selected-container-color: var(--chip-color, var(--color-primary));
+
+  &.mdc-evolution-chip--selected {
+    transform: scale(1.05);
+
+    ::ng-deep .mdc-evolution-chip__text-label {
+      color: #fff;
+    }
+  }
+}
+
+.nearby-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  padding: var(--space-1) 0 var(--space-3);
+}
+
+.nearby-icon {
+  vertical-align: middle;
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+  margin-inline-end: 2px;
+}
+
+.radius-control {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  min-width: 220px;
+
+  mat-slider { flex: 1; }
+}
+
+.spacer { flex: 1; }
+
+.view-toggle {
+  border-color: var(--color-border);
+
+  .toggle-label {
+    margin-inline-start: 4px;
+  }
+
+  @media (max-width: 600px) {
+    .toggle-label { display: none; }
+  }
+}
+
+.map-loading-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--color-text-secondary);
+  padding: var(--space-4) 0;
+}
+
+.ads-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-2);
+  padding-bottom: var(--space-2);
+
+  @media (max-width: 960px) { grid-template-columns: repeat(2, 1fr); }
+  @media (max-width: 600px) { grid-template-columns: 1fr; }
+
+  // Staggered entrance: each card fades/slides in a beat after the previous.
+  > app-ad-card {
+    display: block;
+    animation: fade-in-up 0.36s ease both;
+
+    @for $i from 1 through 16 {
+      &:nth-child(#{$i}) { animation-delay: #{$i * 45}ms; }
+    }
+  }
+}
+
+mat-paginator {
+  background: transparent;
+  margin-bottom: var(--space-3);
+}

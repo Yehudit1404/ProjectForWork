@@ -1,0 +1,46 @@
+<div class="location-picker">
+  <div class="picker-row">
+    <mat-form-field appearance="outline" class="address-field">
+      <mat-label>חיפוש כתובת</mat-label>
+      <input
+        matInput
+        [value]="addressText()"
+        (input)="onAddressInput($any($event.target).value)"
+        (focus)="suggestions().length && suggestionsOpen.set(true)"
+        (blur)="closeSuggestions()"
+        placeholder="הקלידו כתובת..."
+        autocomplete="off"
+      />
+      <mat-spinner *ngIf="searching()" matSuffix diameter="18"></mat-spinner>
+
+      <div class="suggestions-panel" *ngIf="suggestionsOpen() && suggestions().length">
+        <button
+          type="button"
+          class="suggestion-item"
+          *ngFor="let suggestion of suggestions()"
+          (mousedown)="selectSuggestion(suggestion)"
+        >
+          <mat-icon>place</mat-icon>
+          <span>{{ suggestion.label }}</span>
+        </button>
+      </div>
+    </mat-form-field>
+
+    <button mat-stroked-button type="button" (click)="useCurrentLocation()" [disabled]="locatingInProgress()">
+      <mat-icon>my_location</mat-icon>
+      השתמש/י במיקום שלי
+    </button>
+  </div>
+
+  <div #mapContainer class="leaflet-container-host"></div>
+
+  <div class="address-summary" *ngIf="addressText()">
+    <mat-icon>place</mat-icon>
+    <span>{{ addressText() }}</span>
+    <button mat-icon-button type="button" (click)="clearLocation()" aria-label="הסרת מיקום">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <p class="osm-attribution">מבוסס נתוני מפה ⓒ תורמי OpenStreetMap</p>
+</div>

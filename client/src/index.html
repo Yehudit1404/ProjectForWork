@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <title>לוח מודעות שכונתי</title>
+  <base href="/">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="לוח מודעות שכונתי - מצאו ופרסמו מודעות בקרבתכם">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;500;600;700&family=Rubik:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<body class="mat-typography">
+  <script>
+    // Applied synchronously (before Angular bootstraps) to avoid a
+    // light-theme flash on load when the saved/OS preference is dark.
+    (function () {
+      var saved = localStorage.getItem('neighborhood-board.theme');
+      var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      if (saved === 'dark' || (saved === null && prefersDark)) {
+        document.body.classList.add('dark-theme');
+      }
+    })();
+  </script>
+  <app-root></app-root>
+</body>
+</html>

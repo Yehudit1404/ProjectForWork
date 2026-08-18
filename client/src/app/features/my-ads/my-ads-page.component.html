@@ -1,0 +1,48 @@
+<div class="page-container my-ads-page">
+  <h1>המודעות שלי</h1>
+
+  <mat-form-field appearance="outline" class="search-field">
+    <mat-icon matPrefix>search</mat-icon>
+    <input
+      matInput
+      placeholder="חיפוש בתוך המודעות שלי..."
+      [ngModel]="searchTerm()"
+      (ngModelChange)="onSearchInput($event)"
+    />
+  </mat-form-field>
+
+  <ng-container *ngIf="loading()">
+    <app-loading-skeleton [count]="4" />
+  </ng-container>
+
+  <ng-container *ngIf="!loading()">
+    <ng-container *ngIf="ads().length > 0; else emptyState">
+      <div class="ads-grid">
+        <app-ad-card
+          *ngFor="let ad of ads()"
+          [ad]="ad"
+          (editRequested)="onEditRequested($event)"
+          (deleteRequested)="onDeleteRequested($event)"
+        />
+      </div>
+
+      <mat-paginator
+        [length]="totalCount()"
+        [pageSize]="pageSize"
+        [pageIndex]="page()"
+        [hidePageSize]="true"
+        (page)="onPageChange($event)"
+      ></mat-paginator>
+    </ng-container>
+
+    <ng-template #emptyState>
+      <app-empty-state
+        icon="campaign"
+        title="עדיין לא פרסמת אף מודעה"
+        message="זה הזמן לפרסם את המודעה הראשונה שלכם ללוח השכונתי"
+        actionLabel="פרסם את המודעה הראשונה שלך"
+        (actionClicked)="goToNewAd()"
+      />
+    </ng-template>
+  </ng-container>
+</div>

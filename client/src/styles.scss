@@ -1,0 +1,194 @@
+// Custom Theming for Angular Material
+// For more information: https://material.angular.io/guide/theming
+@use '@angular/material' as mat;
+
+@include mat.core();
+
+// Primary/tertiary palettes approximate the spec's design-system colors
+// (section 8.1): a blue primary and an orange accent used for CTAs.
+$client-theme: mat.define-theme((
+  color: (
+    theme-type: light,
+    primary: mat.$blue-palette,
+    tertiary: mat.$orange-palette,
+  ),
+  density: (
+    scale: 0,
+  ),
+));
+
+// Dark variant, activated by adding .dark-theme to <body> (see ThemeService).
+// Only component *colors* are swapped - typography/density stay shared with
+// the light theme so nothing reflows when toggling.
+$client-dark-theme: mat.define-theme((
+  color: (
+    theme-type: dark,
+    primary: mat.$blue-palette,
+    tertiary: mat.$orange-palette,
+  ),
+  density: (
+    scale: 0,
+  ),
+));
+
+:root {
+  @include mat.all-component-themes($client-theme);
+
+  // Design-system tokens (spec section 8) - light values (default).
+  --color-primary: #0f6fb8;
+  --color-primary-dark: #0b4f86;
+  --color-accent: #ff6f00;
+  --color-bg: #f5f5f5;
+  --color-surface: #ffffff;
+  --color-surface-raised: #ffffff;
+  --color-text: #212121;
+  --color-text-secondary: #5a5a5a;
+  --color-danger: #d32f2f;
+  --color-border: #e0e0e0;
+  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.08);
+  --shadow-card-hover: 0 6px 18px rgba(0, 0, 0, 0.14);
+  --color-image-placeholder: #eef1f4;
+  --color-chip-bg: #eef6ff;
+  --color-overlay-pill: rgba(255, 255, 255, 0.9);
+  --hero-gradient: linear-gradient(135deg, #eef6ff 0%, #f5f5f5 100%);
+  --skeleton-a: #eeeeee;
+  --skeleton-b: #f5f5f5;
+
+  --category-buysell: #d6336c;
+  --category-rentals: #7b1fa2;
+  --category-events: #1976d2;
+  --category-travel: #2e7d32;
+  --category-general: #616161;
+
+  --space-1: 8px;
+  --space-2: 16px;
+  --space-3: 24px;
+  --space-4: 32px;
+
+  --radius-md: 12px;
+  --radius-sm: 8px;
+
+  --content-max-width: 1200px;
+
+  --theme-transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+body.dark-theme {
+  @include mat.all-component-colors($client-dark-theme);
+
+  --color-primary: #6cb3ec;
+  --color-primary-dark: #9ccdf3;
+  --color-accent: #ff9142;
+  --color-bg: #121417;
+  --color-surface: #1c1f24;
+  --color-surface-raised: #23262c;
+  --color-text: #eceff1;
+  --color-text-secondary: #a7afb8;
+  --color-danger: #ef5350;
+  --color-border: #33383f;
+  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.35);
+  --shadow-card-hover: 0 6px 20px rgba(0, 0, 0, 0.5);
+  --color-image-placeholder: #262a30;
+  --color-chip-bg: rgba(108, 179, 236, 0.16);
+  --color-overlay-pill: rgba(28, 31, 36, 0.88);
+  --hero-gradient: linear-gradient(135deg, #1a2530 0%, #121417 100%);
+  --skeleton-a: #23262c;
+  --skeleton-b: #2b2f36;
+}
+
+html, body { height: 100%; }
+
+body {
+  margin: 0;
+  font-family: 'Assistant', 'Rubik', Roboto, 'Helvetica Neue', sans-serif;
+  background: var(--color-bg);
+  color: var(--color-text);
+  direction: rtl;
+  transition: var(--theme-transition);
+}
+
+* { box-sizing: border-box; }
+
+h1, h2, h3, h4 { font-family: 'Rubik', 'Assistant', sans-serif; margin: 0; }
+
+a { color: var(--color-primary); }
+
+.page-container {
+  max-width: var(--content-max-width);
+  margin: 0 auto;
+  padding: 0 var(--space-2);
+}
+
+.cta-button {
+  --mdc-filled-button-container-color: var(--color-accent);
+  --mdc-filled-button-label-text-color: #ffffff;
+}
+
+.danger-button {
+  --mdc-filled-button-container-color: var(--color-danger);
+  --mdc-filled-button-label-text-color: #ffffff;
+}
+
+// Angular Material's overlay containers (menus, dialogs, autocompletes,
+// snackbars) are appended to <body>, outside any component's dir="rtl" - set
+// it globally so they mirror correctly too. Since they're direct children of
+// <body>, body.dark-theme's Material color overrides reach them as well.
+.cdk-overlay-container {
+  direction: rtl;
+}
+
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-thumb { background: #c7c7c7; border-radius: 8px; }
+body.dark-theme ::-webkit-scrollbar-thumb { background: #454b53; }
+
+// ---- Leaflet / OpenStreetMap (see LocationPickerComponent, AdsMapViewComponent, AdDetailPageComponent) ----
+
+// Colored circle marker used on the "all ads" map view - one per category color.
+.ad-map-dot-icon span {
+  display: block;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 2px solid #ffffff;
+  box-shadow: 0 0 3px rgba(0, 0, 0, 0.45);
+}
+
+// Leaflet popups are appended inside the map's own DOM (not <body>), so the
+// app-wide RTL rule doesn't reach them automatically - set it explicitly.
+.leaflet-popup-content-wrapper,
+.leaflet-popup-tip {
+  direction: rtl;
+}
+.leaflet-popup-content {
+  direction: rtl;
+  text-align: right;
+  margin: 10px 12px;
+}
+
+// Dark-mode map tiles: OpenStreetMap's raster tiles are always light, so we
+// invert/adjust them with a CSS filter to roughly match the app's dark
+// theme instead of a jarringly bright rectangle in an otherwise dark UI.
+body.dark-theme .leaflet-tile-pane {
+  filter: brightness(0.75) invert(1) contrast(0.9) hue-rotate(200deg) saturate(0.35) brightness(0.95);
+}
+body.dark-theme .leaflet-container {
+  background: #1c1f24;
+}
+
+// ---- Global micro-interactions & animations (see AppComponent + router) ----
+@keyframes fade-in-up {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.route-fade-enter {
+  animation: fade-in-up 0.28s ease both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}

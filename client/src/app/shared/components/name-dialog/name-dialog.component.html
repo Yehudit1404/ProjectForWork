@@ -1,0 +1,17 @@
+<h2 mat-dialog-title>
+  {{ data.mode === 'welcome' ? 'ברוכים הבאים ללוח המודעות!' : 'שינוי שם תצוגה' }}
+</h2>
+<mat-dialog-content>
+  <p *ngIf="data.mode === 'welcome'">איך נקרא לך? השם יוצג לצד המודעות שתפרסמו.</p>
+  <mat-form-field appearance="outline" style="width: 100%">
+    <mat-label>שם תצוגה</mat-label>
+    <input matInput [formControl]="nameControl" (keydown.enter)="submit()" cdkFocusInitial />
+    <mat-error *ngIf="nameControl.hasError('required')">שם תצוגה הוא שדה חובה</mat-error>
+    <mat-error *ngIf="nameControl.hasError('minlength')">השם קצר מדי</mat-error>
+  </mat-form-field>
+</mat-dialog-content>
+<mat-dialog-actions align="start">
+  <button mat-flat-button class="cta-button" (click)="submit()">
+    {{ data.mode === 'welcome' ? 'התחלה' : 'שמירה' }}
+  </button>
+</mat-dialog-actions>

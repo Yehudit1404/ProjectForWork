@@ -1,0 +1,39 @@
+<a class="ad-card" [routerLink]="['/ads', ad().id]">
+  <div class="top-bar" [style.background]="categoryColor()"></div>
+
+  <div class="image-area" [class.no-image]="!ad().imageBase64">
+    <img *ngIf="ad().imageBase64" [src]="ad().imageBase64" [alt]="ad().title" loading="lazy" />
+    <mat-icon *ngIf="!ad().imageBase64" class="placeholder-icon">{{ categoryIcon() }}</mat-icon>
+
+    <div class="owner-actions" *ngIf="isMine()">
+      <button mat-icon-button matTooltip="עריכת מודעה" (click)="onEdit($event)" aria-label="עריכת מודעה">
+        <mat-icon>edit</mat-icon>
+      </button>
+      <button mat-icon-button matTooltip="מחיקת מודעה" (click)="onDelete($event)" aria-label="מחיקת מודעה">
+        <mat-icon>delete</mat-icon>
+      </button>
+    </div>
+  </div>
+
+  <div class="body">
+    <div class="meta-row">
+      <app-category-badge [categoryId]="ad().category" [compact]="true" />
+      <span class="date">{{ relativeDate() }}</span>
+    </div>
+
+    <h3 class="title">{{ ad().title }}</h3>
+    <p class="description">{{ ad().description }}</p>
+
+    <div class="bottom-row">
+      <span class="price" *ngIf="ad().price !== null && ad().price !== undefined">₪{{ ad().price | number }}</span>
+      <span class="price" *ngIf="ad().price === null || ad().price === undefined"></span>
+
+      <span class="owner-and-distance">
+        <span *ngIf="showDistance() && ad().distanceKm !== null && ad().distanceKm !== undefined" class="distance-chip">
+          <mat-icon>near_me</mat-icon>{{ ad().distanceKm! | number: '1.1-1' }} ק"מ
+        </span>
+        {{ ad().ownerName }}
+      </span>
+    </div>
+  </div>
+</a>

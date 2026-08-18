@@ -1,0 +1,36 @@
+:host {
+  display: block;
+  animation: fade-in-up 0.32s ease both;
+}
+
+.my-ads-page {
+  padding: var(--space-3) var(--space-2) var(--space-4);
+}
+
+h1 { font-size: 24px; margin-bottom: var(--space-2); }
+
+.search-field {
+  width: 100%;
+  max-width: 420px;
+  display: block;
+  margin-bottom: var(--space-2);
+}
+
+.ads-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-2);
+  padding-bottom: var(--space-2);
+
+  @media (max-width: 960px) { grid-template-columns: repeat(2, 1fr); }
+  @media (max-width: 600px) { grid-template-columns: 1fr; }
+
+  > app-ad-card {
+    display: block;
+    animation: fade-in-up 0.36s ease both;
+
+    @for $i from 1 through 16 {
+      &:nth-child(#{$i}) { animation-delay: #{$i * 45}ms; }
+    }
+  }
+}

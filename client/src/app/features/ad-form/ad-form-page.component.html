@@ -1,0 +1,87 @@
+<div class="page-container form-page">
+  <h1>{{ isEditMode() ? 'עריכת מודעה' : 'פרסום מודעה חדשה' }}</h1>
+
+  <ng-container *ngIf="loadingExisting()">
+    <div class="loading-row">
+      <mat-spinner diameter="28"></mat-spinner>
+      <span>טוען מודעה לעריכה...</span>
+    </div>
+  </ng-container>
+
+  <form [formGroup]="form" (ngSubmit)="submit()" *ngIf="!loadingExisting()">
+    <section class="form-section">
+      <h2>פרטים בסיסיים</h2>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>כותרת</mat-label>
+        <input matInput formControlName="title" maxlength="80" />
+        <mat-hint align="end">{{ titleLength() }}/{{ titleMax }}</mat-hint>
+        <mat-error *ngIf="form.controls.title.hasError('required')">כותרת היא שדה חובה</mat-error>
+        <mat-error *ngIf="form.controls.title.hasError('minlength')">הכותרת קצרה מדי (מינימום 3 תווים)</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>תיאור</mat-label>
+        <textarea matInput formControlName="description" rows="5" maxlength="1000"></textarea>
+        <mat-hint align="end">{{ descriptionLength() }}/{{ descriptionMax }}</mat-hint>
+        <mat-error *ngIf="form.controls.description.hasError('required')">תיאור הוא שדה חובה</mat-error>
+      </mat-form-field>
+
+      <div class="row-fields">
+        <mat-form-field appearance="outline" class="category-field">
+          <mat-label>קטגוריה</mat-label>
+          <mat-select formControlName="category">
+            <mat-option *ngFor="let category of categories()" [value]="category.id">
+              {{ category.name }}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="form.controls.category.hasError('required')">יש לבחור קטגוריה</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="price-field" *ngIf="priceRelevant()">
+          <mat-label>מחיר (₪)</mat-label>
+          <input matInput type="number" min="0" formControlName="price" />
+        </mat-form-field>
+      </div>
+    </section>
+
+    <section class="form-section">
+      <h2>תמונה</h2>
+
+      <div class="image-uploader" (dragover)="onDragOver($event)" (drop)="onFileDropped($event)">
+        <ng-container *ngIf="!imageBase64()">
+          <mat-icon>add_photo_alternate</mat-icon>
+          <p>גררו תמונה לכאן, או</p>
+          <label class="upload-label">
+            בחרו קובץ
+            <input type="file" accept="image/*" hidden (change)="onFileSelected($event)" />
+          </label>
+          <p class="hint">JPG/PNG עד 8MB</p>
+        </ng-container>
+
+        <ng-container *ngIf="imageBase64()">
+          <img [src]="imageBase64()" alt="תצוגה מקדימה" class="preview-image" />
+          <button mat-stroked-button type="button" (click)="removeImage()">
+            <mat-icon>delete</mat-icon>
+            הסר תמונה
+          </button>
+        </ng-container>
+      </div>
+      <p class="error-text" *ngIf="imageError()">{{ imageError() }}</p>
+    </section>
+
+    <section class="form-section">
+      <h2>מיקום <span class="optional-tag">(אופציונלי)</span></h2>
+      <p class="hint">מומלץ לצרף מיקום כדי שהמודעה תופיע גם בחיפושי "מודעות בקרבתי" של משתמשים אחרים.</p>
+      <app-location-picker [initialLocation]="location()" (locationChanged)="onLocationChanged($event)" />
+    </section>
+
+    <div class="actions-row">
+      <button mat-flat-button class="cta-button" type="submit" [disabled]="saving()">
+        <mat-spinner *ngIf="saving()" diameter="18" class="btn-spinner"></mat-spinner>
+        {{ isEditMode() ? 'עדכן מודעה' : 'שמור מודעה' }}
+      </button>
+      <button mat-button type="button" (click)="cancel()" [disabled]="saving()">ביטול</button>
+    </div>
+  </form>
+</div>

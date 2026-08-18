@@ -1,0 +1,129 @@
+<div class="hero">
+  <div class="page-container">
+    <h1>מה קורה בשכונה?</h1>
+    <p class="subtitle">מצאו מודעות מכירה, השכרה, אירועים וטיולים - ופרסמו משלכם</p>
+
+    <mat-form-field appearance="outline" class="search-field">
+      <mat-icon matPrefix>search</mat-icon>
+      <input
+        matInput
+        placeholder="חפשו מודעות לפי כותרת או תיאור..."
+        [ngModel]="searchTerm()"
+        (ngModelChange)="onSearchInput($event)"
+      />
+      <button *ngIf="searchTerm()" matSuffix mat-icon-button (click)="clearSearch()" aria-label="ניקוי חיפוש">
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-form-field>
+  </div>
+</div>
+
+<div class="page-container">
+  <div class="chips-row">
+    <mat-chip-listbox aria-label="סינון לפי קטגוריה">
+      <mat-chip-option
+        [selected]="selectedCategory() === allCategoriesId"
+        (click)="selectCategory(allCategoriesId)"
+      >
+        הכל
+      </mat-chip-option>
+      <mat-chip-option
+        *ngFor="let category of categories()"
+        [selected]="selectedCategory() === category.id"
+        [style.--chip-color]="category.color"
+        class="category-chip"
+        (click)="selectCategory(category.id)"
+      >
+        {{ category.name }}
+      </mat-chip-option>
+    </mat-chip-listbox>
+  </div>
+
+  <div class="nearby-row">
+    <mat-slide-toggle
+      [checked]="nearbyEnabled()"
+      [disabled]="nearbyLoading()"
+      (change)="toggleNearby($event.checked)"
+    >
+      <mat-icon class="nearby-icon">near_me</mat-icon>
+      מודעות בקרבתי
+    </mat-slide-toggle>
+
+    <ng-container *ngIf="nearbyEnabled()">
+      <div class="radius-control">
+        <span>רדיוס: {{ radiusKm() }} ק"מ</span>
+        <mat-slider min="1" max="50" step="1" discrete>
+          <input matSliderThumb [value]="radiusKm()" (valueChange)="onRadiusChange($event)" />
+        </mat-slider>
+      </div>
+
+      <mat-slide-toggle [checked]="sortByDistance()" (change)="onSortByDistanceChange($event.checked)">
+        מיין לפי מרחק
+      </mat-slide-toggle>
+    </ng-container>
+
+    <span class="spacer"></span>
+
+    <mat-button-toggle-group
+      class="view-toggle"
+      [value]="viewMode()"
+      (change)="setViewMode($event.value)"
+      aria-label="תצוגת לוח המודעות"
+    >
+      <mat-button-toggle value="grid" aria-label="תצוגת רשת">
+        <mat-icon>grid_view</mat-icon>
+        <span class="toggle-label">רשת</span>
+      </mat-button-toggle>
+      <mat-button-toggle value="map" aria-label="תצוגת מפה">
+        <mat-icon>map</mat-icon>
+        <span class="toggle-label">מפה</span>
+      </mat-button-toggle>
+    </mat-button-toggle-group>
+  </div>
+
+  <ng-container *ngIf="viewMode() === 'grid'">
+    <ng-container *ngIf="loading()">
+      <app-loading-skeleton />
+    </ng-container>
+
+    <ng-container *ngIf="!loading()">
+      <ng-container *ngIf="ads().length > 0; else emptyState">
+        <div class="ads-grid">
+          <app-ad-card
+            *ngFor="let ad of ads()"
+            [ad]="ad"
+            [showDistance]="nearbyEnabled()"
+            (editRequested)="onEditRequested($event)"
+            (deleteRequested)="onDeleteRequested($event)"
+          />
+        </div>
+
+        <mat-paginator
+          [length]="totalCount()"
+          [pageSize]="pageSize"
+          [pageIndex]="page()"
+          [hidePageSize]="true"
+          (page)="onPageChange($event)"
+        ></mat-paginator>
+      </ng-container>
+
+      <ng-template #emptyState>
+        <app-empty-state
+          icon="search_off"
+          title="לא נמצאו מודעות התואמות לחיפוש שלך"
+          message="נסו לשנות את מילות החיפוש או לנקות את המסננים"
+          actionLabel="פרסמו מודעה חדשה"
+          (actionClicked)="goToNewAd()"
+        />
+      </ng-template>
+    </ng-container>
+  </ng-container>
+
+  <ng-container *ngIf="viewMode() === 'map'">
+    <div class="map-loading-row" *ngIf="mapLoading()">
+      <mat-spinner diameter="22"></mat-spinner>
+      <span>טוען מודעות למפה...</span>
+    </div>
+    <app-ads-map-view *ngIf="!mapLoading()" [ads]="mapAds()" />
+  </ng-container>
+</div>

@@ -1,0 +1,10 @@
+<div class="map-view">
+  <div class="map-note" *ngIf="adsWithoutLocationCount() > 0">
+    <mat-icon>info</mat-icon>
+    {{ adsWithoutLocationCount() }} מודעות בתוצאות הנוכחיות ללא מיקום משויך ולכן אינן מוצגות על המפה.
+  </div>
+
+  <div #mapContainer class="leaflet-container-host"></div>
+
+  <p class="osm-attribution">מבוסס נתוני מפה ⓒ תורמי OpenStreetMap</p>
+</div>

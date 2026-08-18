@@ -1,0 +1,67 @@
+<div class="page-container detail-page">
+  <ng-container *ngIf="loading()">
+    <div class="loading-row">
+      <mat-spinner diameter="28"></mat-spinner>
+      <span>טוען מודעה...</span>
+    </div>
+  </ng-container>
+
+  <ng-container *ngIf="!loading() && notFound()">
+    <div class="not-found">
+      <h2>המודעה לא נמצאה</h2>
+      <p>ייתכן שהמודעה נמחקה או שהקישור שגוי.</p>
+      <a mat-flat-button class="cta-button" routerLink="/">חזרה ללוח המודעות</a>
+    </div>
+  </ng-container>
+
+  <ng-container *ngIf="!loading() && ad() as adValue">
+    <nav class="breadcrumb">
+      <a routerLink="/">לוח מודעות</a>
+      <mat-icon>chevron_left</mat-icon>
+      <span>{{ categoryName(adValue.category) }}</span>
+      <mat-icon>chevron_left</mat-icon>
+      <span class="current">{{ adValue.title }}</span>
+    </nav>
+
+    <div class="detail-image" *ngIf="adValue.imageBase64">
+      <img [src]="adValue.imageBase64" [alt]="adValue.title" />
+    </div>
+
+    <div class="detail-header">
+      <h1>{{ adValue.title }}</h1>
+      <app-category-badge [categoryId]="adValue.category" />
+    </div>
+
+    <div class="price" *ngIf="adValue.price !== null && adValue.price !== undefined">
+      ₪{{ adValue.price | number }}
+    </div>
+
+    <p class="description">{{ adValue.description }}</p>
+
+    <div class="owner-meta">
+      <mat-icon>person</mat-icon>
+      <span>{{ adValue.ownerName }}</span>
+      <span class="dot">•</span>
+      <span>{{ relativeDate() }}</span>
+    </div>
+
+    <div class="location-block" *ngIf="adValue.location">
+      <h3><mat-icon>place</mat-icon> מיקום</h3>
+
+      <div #mapContainer class="leaflet-container-host"></div>
+
+      <p class="address-text">{{ adValue.location.address }}</p>
+    </div>
+
+    <div class="actions-row" *ngIf="isMine()">
+      <a mat-flat-button class="cta-button" [routerLink]="['/ads', adValue.id, 'edit']">
+        <mat-icon>edit</mat-icon>
+        ערוך מודעה
+      </a>
+      <button mat-flat-button class="danger-button" (click)="deleteAd()">
+        <mat-icon>delete</mat-icon>
+        מחק מודעה
+      </button>
+    </div>
+  </ng-container>
+</div>

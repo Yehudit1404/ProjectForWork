@@ -1,0 +1,4 @@
+<span class="badge" [class.compact]="compact()" [style.background]="color()">
+  <mat-icon *ngIf="!compact()" class="badge-icon">{{ icon() }}</mat-icon>
+  {{ name() }}
+</span>

@@ -1,0 +1,49 @@
+<mat-toolbar class="app-toolbar">
+  <div class="toolbar-inner">
+    <a class="brand" routerLink="/">
+      <mat-icon>storefront</mat-icon>
+      <span>לוח מודעות שכונתי</span>
+    </a>
+
+    <span class="spacer"></span>
+
+    <button mat-button routerLink="/my-ads">
+      <mat-icon>bookmark</mat-icon>
+      <span class="btn-label">המודעות שלי</span>
+    </button>
+
+    <button mat-flat-button class="cta-button" routerLink="/ads/new">
+      <mat-icon>add</mat-icon>
+      <span class="btn-label">מודעה חדשה</span>
+    </button>
+
+    <button
+      mat-icon-button
+      class="theme-toggle"
+      (click)="toggleTheme()"
+      [attr.aria-label]="darkMode() ? 'מעבר למצב יום' : 'מעבר למצב לילה'"
+      [matTooltip]="darkMode() ? 'מצב יום' : 'מצב לילה'"
+    >
+      <mat-icon>{{ darkMode() ? 'light_mode' : 'dark_mode' }}</mat-icon>
+    </button>
+
+    <button mat-icon-button class="avatar-button" [matMenuTriggerFor]="userMenu" aria-label="תפריט משתמש">
+      <span class="avatar-circle">{{ initials() }}</span>
+    </button>
+    <mat-menu #userMenu="matMenu">
+      <div class="menu-header" *ngIf="ownerName()">מחוברים בתור {{ ownerName() }}</div>
+      <button mat-menu-item (click)="changeDisplayName()">
+        <mat-icon>edit</mat-icon>
+        שינוי שם תצוגה
+      </button>
+      <button mat-menu-item (click)="resetLocalData()">
+        <mat-icon>restart_alt</mat-icon>
+        ניקוי נתונים מקומיים
+      </button>
+    </mat-menu>
+  </div>
+</mat-toolbar>
+
+<main>
+  <router-outlet />
+</main>

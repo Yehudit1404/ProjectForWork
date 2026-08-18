@@ -1,0 +1,20 @@
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 10px;
+  padding: var(--space-4) var(--space-2);
+  color: var(--color-text-secondary);
+}
+
+.empty-icon {
+  font-size: 56px;
+  width: 56px;
+  height: 56px;
+  color: #c6ccd2;
+}
+
+h3 { color: var(--color-text); }
+
+p { margin: 0; max-width: 420px; }
